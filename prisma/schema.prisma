@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Prescription {
+  id        String @id
+  patient   String
+  medicine  String
+  doctor    String
+  date      String
+  status    String @default("Pending")
+}
+
+model InventoryItem {
+  id           String @id
+  name         String
+  category     String
+  stock        Int
+  reorderLevel Int
+  expiry       String
+  status       String
+}

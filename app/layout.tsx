@@ -1,3 +1,7 @@
+import { PageTitle } from "@/components/page-title";
+import { ThemeProvider } from "@/components/theme-provider";
+import { Sidebar } from "@/components/sidebar";
+import { ThemeToggle } from "@/components/theme-toggle";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -20,10 +24,23 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+  lang="en"
+  suppressHydrationWarning
+  className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+>
+      <body className="min-h-full flex flex-col">  <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+    <div className="flex min-h-screen">
+      <Sidebar />
+      <div className="flex min-w-0 flex-1 flex-col">
+        <header className="flex items-center justify-between border-b px-6 py-3">
+          <PageTitle />
+          <ThemeToggle />
+        </header>
+        <main className="flex-1 p-6">{children}</main>
+      </div>
+    </div>
+  </ThemeProvider>
+  </body>
     </html>
   );
 }
