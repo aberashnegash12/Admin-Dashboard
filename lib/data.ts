@@ -72,3 +72,5 @@ export const prescriptions: Prescription[] = [
   { id: "RX-8807", patient: "Mei Tanaka", medicine: "Cetirizine 10 mg", doctor: "Dr. Haile", date: "2026-11-14", status: "Picked up" },
   { id: "RX-8808", patient: "Omar Farouk", medicine: "Azithromycin 250 mg", doctor: "Dr. Bekele", date: "2026-11-14", status: "Picked up" },
 ];
+
+export type FormState = { error?: string; success?: string };

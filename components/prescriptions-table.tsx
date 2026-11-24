@@ -38,6 +38,7 @@ const actionLabel: Record<RxStatus, string> = {
 export function PrescriptionsTable({ items }: { items: Prescription[] }) {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<"All" | RxStatus>("All");
+  const [error, setError] = useState("");
   const [pending, startTransition] = useTransition();
 
   const rows = useMemo(() => {
@@ -73,6 +74,12 @@ export function PrescriptionsTable({ items }: { items: Prescription[] }) {
           </select>
         </div>
 
+        {error && (
+          <p role="alert" className="text-sm text-red-600 dark:text-red-400">
+            {error}
+          </p>
+        )}
+
         <Table>
           <TableHeader>
             <TableRow>
@@ -104,7 +111,12 @@ export function PrescriptionsTable({ items }: { items: Prescription[] }) {
                       size="sm"
                       variant="outline"
                       disabled={pending}
-                      onClick={() => startTransition(() => advancePrescription(p.id))}
+                      onClick={() =>
+                        startTransition(async () => {
+                          const res = await advancePrescription(p.id);
+                          setError(res?.error ?? "");
+                        })
+                      }
                     >
                       {actionLabel[p.status]}
                     </Button>

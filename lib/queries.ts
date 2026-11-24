@@ -3,8 +3,19 @@ import { prisma } from "@/lib/prisma";
 import type { InventoryItem, Kpi, Prescription, RxStatus, StockStatus } from "@/lib/data";
 
 export async function getInventory(): Promise<InventoryItem[]> {
+  await connection();
   const rows = await prisma.inventoryItem.findMany({ orderBy: { name: "asc" } });
-  return rows.map((r) => ({ ...r, status: r.status as StockStatus }));
+
+  const limit = new Date();
+  limit.setDate(limit.getDate() + 30);
+  const cutoff = limit.toISOString().slice(0, 10);
+
+  return rows.map((r) => {
+    let status: StockStatus = "In stock";
+    if (r.expiry <= cutoff) status = "Expiring soon";
+    else if (r.stock < r.reorderLevel) status = "Low stock";
+    return { ...r, status };
+  });
 }
 
 export async function getPrescriptions(): Promise<Prescription[]> {
